@@ -145,11 +145,11 @@ export default function Verification() {
     if (verification.isVerified) {
       console.log("Proceeding with verified account");
       // Navigate to next step with full verification
-      navigate("/dashboard"); // Replace with your next route
+      navigate("/homee"); // Replace with your next route
     } else {
       console.log("Proceeding without verification");
       // Navigate with limited features
-      navigate("/dashboard?verified=false"); // Replace with your next route
+      navigate("/homee?verified=false"); // Replace with your next route
     }
   };
 

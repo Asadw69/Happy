@@ -374,6 +374,10 @@ export default function HomePage() {
           transition: all 0.2s;
         }
         
+        .snubo-input.search-input {
+          padding-left: 4rem;
+        }
+        
         .snubo-input:focus {
           outline: none;
           border-color: #dc2626;
@@ -540,10 +544,10 @@ export default function HomePage() {
             <div className="space-y-6 pt-4">
               <div className="px-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" size={18} />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted" size={18} />
                   <input
                     type="text"
-                    className="snubo-input w-full pl-10"
+                    className="snubo-input search-input w-full"
                     placeholder="Search interests, people, and more..."
                   />
                 </div>
@@ -699,10 +703,13 @@ export default function HomePage() {
               <span className="text-xs font-medium">Home</span>
             </button>
             
-            <button className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 text-secondary transition-colors">
+            <Link 
+              to="/messages"
+              className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 text-secondary transition-colors"
+            >
               <MessageSquare size={22} />
               <span className="text-xs font-medium">Messages</span>
-            </button>
+            </Link>
             
             <button 
               className="relative p-4 text-white rounded-2xl transition-all duration-300 active:scale-95"

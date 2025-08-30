@@ -186,14 +186,14 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
-      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto flex flex-col items-center text-center space-y-3 sm:space-y-4 md:space-y-6">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 sm:px-6 py-8">
+      <div className="w-full max-w-sm sm:max-w-md mx-auto flex flex-col items-center text-center space-y-4 sm:space-y-6">
         {/* Logo */}
         <div className="space-y-1 sm:space-y-2">
-          <h1 className="font-inknut font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-snubo-red drop-shadow-lg">
+          <h1 className="font-inknut font-semibold text-4xl sm:text-5xl lg:text-6xl text-snubo-red drop-shadow-lg">
             Snubo
           </h1>
-          <p className="font-istok text-xs sm:text-sm md:text-base lg:text-lg text-black">
+          <p className="font-istok text-sm sm:text-base lg:text-lg text-black">
             Designed for good.
           </p>
         </div>
@@ -201,13 +201,13 @@ export default function SignUp() {
         {/* Sign Up Form */}
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-xs sm:max-w-sm md:max-w-md space-y-3 sm:space-y-4 mt-6 sm:mt-8"
+          className="w-full max-w-sm space-y-4 mt-8"
         >
-          <h2 className="font-inknut font-semibold text-lg sm:text-xl md:text-2xl text-black mb-4 sm:mb-6">
+          <h2 className="font-inknut font-semibold text-xl sm:text-2xl text-black mb-6">
             Create Account
           </h2>
 
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-4">
             <ValidatedInput
               type="text"
               placeholder="Full Name"
@@ -218,7 +218,7 @@ export default function SignUp() {
               validation={validateName}
             />
 
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-2">
               <ValidatedInput
                 type="text"
                 placeholder="Email or Phone number"
@@ -243,7 +243,7 @@ export default function SignUp() {
                     type="button"
                     onClick={sendOtp}
                     disabled={verification.isVerifying}
-                    className="w-full bg-gray-100 text-gray-700 font-inclusive text-sm py-3 sm:py-4 px-4 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 min-h-[44px] touch-manipulation"
+                    className="w-full bg-gray-100 text-gray-700 font-inclusive text-sm py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
                   >
                     {verification.isVerifying
                       ? "Sending..."
@@ -255,7 +255,7 @@ export default function SignUp() {
 
               {/* OTP Input */}
               {verification.otpSent && !verification.isVerified && (
-                <div className="space-y-2 sm:space-y-3">
+                <div className="space-y-2">
                   <ValidatedInput
                     type="text"
                     placeholder="Enter 6-digit verification code"
@@ -273,7 +273,7 @@ export default function SignUp() {
                     disabled={
                       verification.otp.length !== 6 || verification.isVerifying
                     }
-                    className="w-full bg-snubo-red text-white font-inclusive text-sm py-3 sm:py-4 px-4 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:bg-gray-300 min-h-[44px] touch-manipulation"
+                    className="w-full bg-snubo-red text-white font-inclusive text-sm py-2 px-4 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:bg-gray-300"
                   >
                     {verification.isVerifying ? "Verifying..." : "Verify Code"}
                   </button>
@@ -282,7 +282,7 @@ export default function SignUp() {
 
               {/* Verified Status */}
               {verification.isVerified && (
-                <div className="flex items-center justify-center text-green-600 font-inclusive text-sm py-2">
+                <div className="flex items-center text-green-600 font-inclusive text-sm">
                   <svg
                     className="w-4 h-4 mr-2"
                     fill="currentColor"
@@ -330,7 +330,7 @@ export default function SignUp() {
           </div>
 
           {/* Legal Text */}
-          <p className="font-inclusive text-xs text-black leading-relaxed text-center mt-4 sm:mt-6 px-2">
+          <p className="font-inclusive text-xs text-black leading-tight text-center mt-4">
             By signing up, you agree to our Terms of Service and Privacy Policy.
           </p>
 
@@ -338,7 +338,7 @@ export default function SignUp() {
           <button
             type="submit"
             disabled={!isFormValid()}
-            className={`w-full font-inknut font-semibold text-sm sm:text-base lg:text-lg py-3 sm:py-4 px-6 sm:px-8 rounded-full shadow-lg transition-colors mt-4 sm:mt-6 min-h-[44px] sm:min-h-[48px] touch-manipulation ${
+            className={`w-full font-inknut font-semibold text-sm lg:text-base py-3 sm:py-4 px-6 sm:px-8 rounded-full shadow-lg transition-colors mt-6 ${
               isFormValid()
                 ? "bg-snubo-red text-white hover:bg-red-600"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -348,15 +348,15 @@ export default function SignUp() {
           </button>
 
           {/* Sign In Link */}
-          <div className="text-center mt-4 sm:mt-6">
-            <span className="font-inclusive text-xs sm:text-sm text-black">
+          <div className="text-center mt-4">
+            <span className="font-inclusive text-sm text-black">
               Already have an account?{" "}
             </span>
             <Link
-              to="/"
-              className="font-inknut font-semibold text-xs sm:text-sm text-snubo-red hover:text-red-600 transition-colors py-2 px-2 min-h-[44px] touch-manipulation inline-flex items-center"
+              to="/signin"
+              className="font-inknut font-semibold text-sm text-snubo-red hover:text-red-600 transition-colors"
             >
-              Sign in
+              Sign In
             </Link>
           </div>
         </form>

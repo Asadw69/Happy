@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import BottomNav from "@/components/BottomNav";
 import {
   ArrowLeft,
   Settings,
@@ -408,6 +409,7 @@ export default function Messages() {
         <button className="fixed bottom-24 right-6 w-14 h-14 bg-[#e53e3e] hover:bg-[#d53030] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-10">
           <Plus size={24} />
         </button>
+        <BottomNav isMessages={true} />
       </div>
     </>
   );

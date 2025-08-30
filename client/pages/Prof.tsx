@@ -367,7 +367,7 @@ export default function Profile() {
         )}
       </main>
 
-      <BottomNav />
+      <BottomNav isProfile={true} />
     </div>
   );
 }

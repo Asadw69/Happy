@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import BottomNav from "@/components/BottomNav";
 import {
   Heart,
   MessageCircle,
@@ -30,6 +31,7 @@ interface Post {
   timeAgo: string;
   content: string;
   image?: string;
+  video?: string;
   likes: number;
   isLiked: boolean;
   comments: number;
@@ -257,16 +259,51 @@ export default function HomePage() {
     },
   ]);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("snubo-draft-upload");
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      const base = {
+        id: String(Date.now()),
+        username: "you",
+        userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=you",
+        timeAgo: "now",
+        likes: 0,
+        isLiked: false,
+        comments: 0,
+        isBookmarked: false,
+      };
+      if (draft.type === "photo") {
+        setPosts((p) => [
+          { ...base, content: draft.caption || "", image: draft.url },
+          ...p,
+        ]);
+      } else if (draft.type === "video") {
+        setPosts((p) => [
+          { ...base, content: draft.caption || "", video: draft.url },
+          ...p,
+        ]);
+      } else if (draft.type === "snip") {
+        setPosts((p) => [
+          { ...base, content: draft.text || "" },
+          ...p,
+        ]);
+      }
+      localStorage.removeItem("snubo-draft-upload");
+    } catch {}
+  }, []);
+
   // --- Functions ---
   const toggleLike = (postId: string) => {
     setPosts(
       posts.map((post) =>
         post.id === postId
           ? {
-              ...post,
-              isLiked: !post.isLiked,
-              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
-            }
+            ...post,
+            isLiked: !post.isLiked,
+            likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+          }
           : post,
       ),
     );
@@ -293,11 +330,10 @@ export default function HomePage() {
     count?: number;
   }) => (
     <button
-      className={`relative px-4 py-3 font-medium text-sm transition-all duration-300 rounded-xl ${
-        activeTab === tabName
+      className={`relative px-4 py-3 font-medium text-sm transition-all duration-300 rounded-xl ${activeTab === tabName
           ? "text-red-600 bg-red-50"
           : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-      }`}
+        }`}
       onClick={() => setActiveTab(tabName)}
     >
       <div className="flex items-center space-x-1">
@@ -418,7 +454,7 @@ export default function HomePage() {
                 Snubo
               </h1>
             </div>
-            
+
             <div className="flex items-center space-x-1">
               <TabButton tabName="follow">
                 <span>Follow</span>
@@ -430,7 +466,7 @@ export default function HomePage() {
                 <span>Snip</span>
               </TabButton>
             </div>
-            
+
             <button className="snubo-button-ghost">
               <Menu size={20} />
             </button>
@@ -445,9 +481,8 @@ export default function HomePage() {
               {posts.map((post, index) => (
                 <article
                   key={post.id}
-                  className={`snubo-card mx-4 overflow-hidden ${
-                    index === 0 ? "shadow-glow" : ""
-                  }`}
+                  className={`snubo-card mx-4 overflow-hidden ${index === 0 ? "shadow-glow" : ""
+                    }`}
                 >
                   {/* Post Header */}
                   <div className="flex items-center justify-between p-4 pb-3">
@@ -493,17 +528,27 @@ export default function HomePage() {
                     </div>
                   )}
 
+                  {/* Post Video */}
+                  {!post.image && post.video && (
+                    <div className="relative overflow-hidden">
+                      <video
+                        src={post.video}
+                        className="w-full h-80 object-cover"
+                        controls
+                      />
+                    </div>
+                  )}
+
                   {/* Post Actions */}
                   <div className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => toggleLike(post.id)}
-                          className={`flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-200 ${
-                            post.isLiked
+                          className={`flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-200 ${post.isLiked
                               ? "bg-red-50 text-red-600"
                               : "hover:bg-gray-100 text-secondary"
-                          }`}
+                            }`}
                         >
                           <Heart
                             size={20}
@@ -511,24 +556,23 @@ export default function HomePage() {
                           />
                           <span className="text-sm font-medium">{post.likes}</span>
                         </button>
-                        
+
                         <button className="flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-gray-100 text-secondary transition-colors duration-200">
                           <MessageCircle size={20} />
                           <span className="text-sm font-medium">{post.comments}</span>
                         </button>
-                        
+
                         <button className="snubo-button-ghost p-2">
                           <Share size={20} />
                         </button>
                       </div>
-                      
+
                       <button
                         onClick={() => toggleBookmark(post.id)}
-                        className={`p-2 rounded-xl transition-all duration-200 ${
-                          post.isBookmarked
+                        className={`p-2 rounded-xl transition-all duration-200 ${post.isBookmarked
                             ? "bg-red-50 text-red-600"
                             : "hover:bg-gray-100 text-secondary"
-                        }`}
+                          }`}
                       >
                         <Bookmark size={20} className={post.isBookmarked ? "fill-current" : ""} />
                       </button>
@@ -561,12 +605,11 @@ export default function HomePage() {
                     <button
                       key={interest}
                       onClick={() => setSelectedInterest(interestKey)}
-                      className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex-shrink-0 ${
-                        selectedInterest === interestKey
+                      className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex-shrink-0 ${selectedInterest === interestKey
                           ? "bg-red-600 text-white"
                           : "bg-white text-secondary hover:text-primary border border-light"
-                      }`}
-                      style={{ 
+                        }`}
+                      style={{
                         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
                       }}
                     >
@@ -584,7 +627,7 @@ export default function HomePage() {
                   <div
                     key={item.id}
                     className="aspect-square relative cursor-pointer group rounded-xl overflow-hidden"
-                    style={{ 
+                    style={{
                       boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
                       transition: 'all 0.3s'
                     }}
@@ -661,9 +704,9 @@ export default function HomePage() {
                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                 >
                   <div className="flex items-center mb-4">
-                    <div 
+                    <div
                       className="w-12 h-12 flex items-center justify-center text-white rounded-xl"
-                      style={{ 
+                      style={{
                         background: item.color,
                         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                       }}
@@ -695,47 +738,7 @@ export default function HomePage() {
           )}
         </main>
 
-        {/* Enhanced Bottom Navigation */}
-        <nav className="flex-shrink-0 fixed bottom-0 left-0 right-0 bg-white bg-opacity-95 backdrop-blur-md border-t border-light" style={{ boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
-          <div className="flex items-center justify-around max-w-md mx-auto py-3 px-4">
-            <button className="flex flex-col items-center space-y-1 p-2 rounded-xl bg-red-50 text-red-600">
-              <Home size={22} />
-              <span className="text-xs font-medium">Home</span>
-            </button>
-            
-            <Link 
-              to="/messages"
-              className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 text-secondary transition-colors"
-            >
-              <MessageSquare size={22} />
-              <span className="text-xs font-medium">Messages</span>
-            </Link>
-            
-            <button 
-              className="relative p-4 text-white rounded-2xl transition-all duration-300 active:scale-95"
-              style={{ 
-                background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-              }}
-            >
-              <Plus size={24} />
-            </button>
-            
-            <button className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 text-secondary transition-colors relative">
-              <Bell size={22} />
-              <span className="text-xs font-medium">Notifications</span>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></div>
-            </button>
-            
-            <Link
-              to="/profile"
-              className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 text-secondary transition-colors"
-            >
-              <User size={22} />
-              <span className="text-xs font-medium">Profile</span>
-            </Link>
-          </div>
-        </nav>
+        <BottomNav isHome={true} />
       </div>
     </>
   );
